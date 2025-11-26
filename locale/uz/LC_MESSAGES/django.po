@@ -1,0 +1,104 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-26 00:08+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+#: bot/handlers/start.py:39
+msgid "Welcome to main menu 😊"
+msgstr "Bosh menyuga xush kelibsiz"
+
+#: bot/handlers/start.py:59
+msgid "✅ Language changed successfully!"
+msgstr "Til muvaffaqqiyatli ozgartirildi"
+
+#: bot/handlers/start.py:64
+msgid ""
+"🎉 Great! Now you can use the bot in your preferred language.\n"
+"\n"
+"Use /help to see available commands."
+msgstr "Ajoyib endi siz botni ozingiz tanlagan tilda foydalana olasiz "
+
+#: bot/handlers/start.py:75
+msgid ""
+"📚 <b>Available Commands:</b>\n"
+"\n"
+"/start - Start the bot\n"
+"/help - Show this help message\n"
+"/language - Change language\n"
+"\n"
+"If you have any questions, feel free to ask!"
+msgstr ""
+
+#: bot/handlers/start.py:88
+msgid "🌐 Please select your language:"
+msgstr "🌐 Iltimos tilni tannlang:"
+
+#: bot/keyboards/default/user.py:34
+msgid "🛍 Order"
+msgstr "🛍 Buyurtma berish"
+
+#: bot/keyboards/default/user.py:35
+msgid "📖 My orders"
+msgstr "📖 Mening buyurtmalarim"
+
+#: bot/keyboards/default/user.py:37
+msgid "⚙️Settings"
+msgstr "⚙️Sozlamalar"
+
+#: bot/keyboards/default/user.py:38
+msgid "🔥 Promotions"
+msgstr "🔥 Chegirmalar"
+
+#: bot/keyboards/default/user.py:41
+msgid "🙋🏻‍♂️ Join to our team"
+msgstr "🙋🏻‍♂️ Bizning jamoaga qoshiling"
+
+#: bot/keyboards/default/user.py:42
+msgid "☎️ Contact"
+msgstr "☎️ Aloqa"
+
+#: bot/models/base.py:21
+msgid "city"
+msgstr "shahar"
+
+#: bot/models/base.py:22
+msgid "cities"
+msgstr "shaharlar"
+
+#: bot/models/product.py:8 bot/models/product.py:20
+msgid "title"
+msgstr ""
+
+#: bot/models/product.py:15 bot/models/product.py:38
+msgid "category"
+msgstr ""
+
+#: bot/models/product.py:16
+msgid "categories"
+msgstr ""
+
+#: bot/models/product.py:32
+msgid "temp_file"
+msgstr ""
+
+#: bot/models/product.py:46
+msgid "product"
+msgstr ""
+
+#: bot/models/product.py:47
+msgid "products"
+msgstr "mahsulotlar"
