@@ -3,19 +3,21 @@ from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from django.utils.translation import gettext as _
-
-from bot.keyboards.default.user import get_cities_keyboard, main_menu_en
-from bot.keyboards.default.user import get_language_keyboard
-from bot.states.register import RegisterState
+from bot.keyboards.builder import default_keyboard_builder
+from bot.keyboards.default.user import get_user_main_keyboards
+from bot.keyboards.inline.user import get_language_keyboard
+from bot.states.auth import RegisterState
+from bot.utils.city import get_all_cities, get_city
 from bot.utils.product import get_all_products
-from bot.utils.translation import set_user_language, get_or_create_user, get_user_language
+from bot.utils.translation import set_user_language, get_or_create_user
+from bot.utils.user import partial_update_user
 
 router = Router()
-
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
     """Start command handler"""
+    await state.set_state(RegisterState.language)
     user = message.from_user
 
     # Create or update user in database (await async function)
@@ -37,64 +39,70 @@ Hello! Welcome to Les Ailes delivery service.
             welcome_text,
             reply_markup=await get_language_keyboard()
         )
-    elif user.city is None:
-        lang = get_user_language(message.chat.id)
-        text = _("Please, choose your city:")
+    else:
+        cities = await get_all_cities()
+        text = _("Please select the city")
         await message.answer(
             text,
-            reply_markup=await get_cities_keyboard(lang=str(lang))
+            reply_markup=await default_keyboard_builder(
+                message=message, keyboards=cities, column_name='name'
+            )
         )
         await state.set_state(RegisterState.city)
 
-    else:
-        text = _("Welcome to main menu 😊")
-        await message.answer(
-            text,
-            reply_markup=main_menu_en
+
+@router.callback_query(F.data.startswith("lang_"), RegisterState.language)
+async def change_language(call: CallbackQuery, state: FSMContext):
+    """Handle language change"""
+    language_code = call.data.split("_")[1]
+    user_id = call.from_user.id
+
+    # Update user's language (await async function)
+    await set_user_language(user_id, language_code)
+
+    cities = await get_all_cities()
+    text = _("Please choose the city")
+    await call.message.answer(
+        text,
+        reply_markup=await default_keyboard_builder(
+            message=call.message, keyboards=cities, column_name='name'
         )
+    )
+
+    await state.set_state(RegisterState.city)
 
 
 @router.message(RegisterState.city)
-async def city_handler(message: Message, state: FSMContext):
-    await state.update_data(city=message.text, chat_id=message.chat.id, created_at=message.date)
-    data = await state.get_data()
-    city = data.get('city')
-    user, changed = await get_or_create_user(
-        city = city
-    )
-    if changed:
-        text = _("Welcome to main menu 😊")
-        await message.answer(
-            text,
-            reply_markup=main_menu_en
-        )
-        await state.clear()
+async def get_city_handler(message: Message, state: FSMContext):
+    city = await get_city(city_name=message.text)
+
+    await partial_update_user(data={
+        'city_id': city.id
+    }, user_id=message.chat.id)
+
+    text = _('Welcome to main menu 😊')
+    await message.answer(text=text, reply_markup=await get_user_main_keyboards())
+    await state.clear()
 
 
-@router.callback_query(F.data.startswith("lang_"))
-async def change_language(callback: CallbackQuery):
-    """Handle language change"""
-    language_code = callback.data.split("_")[1]
-    user_id = callback.from_user.id
-
-    await set_user_language(user_id, language_code)
-
-    # Activate new language for response
-    from django.utils.translation import activate
-    activate(language_code)
-
-    success_message = _("✅ Language changed successfully!")
-    await callback.answer(success_message)
-
-    # Send confirmation message
-    menu_text = _(
-        "🎉 Great! Now you can use the bot in your preferred language.\n\n"
-        "Use /help to see available commands."
-    )
-
-    await callback.message.edit_text(menu_text)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# -----------------------------------------------------
 @router.message(Command("help"))
 async def cmd_help(message: Message):
     """Help command with translated text"""

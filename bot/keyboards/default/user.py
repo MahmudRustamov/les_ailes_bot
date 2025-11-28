@@ -1,10 +1,9 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from aiogram.utils.keyboard import ReplyKeyboardBuilder
 from django.utils.translation import gettext as _
-from bot.utils.city import get_all_cities
 
 
-async def get_language_keyboard():
+
+async def get_language_keyboards():
     """Keyboard for language selection"""
     languages = ReplyKeyboardMarkup(
         keyboard=[
@@ -18,40 +17,28 @@ async def get_language_keyboard():
 
 
 
-async def get_cities_keyboard(lang: str):
-    cities = await get_all_cities()
-    keyboards = ReplyKeyboardBuilder()
-    name_field = f"name_{lang}"
 
-    if cities:
-        for city in cities:
-            city_name = getattr(city, name_field, city.name)
-            keyboards.button(text=city_name)
-    else:
-        back_text_map = {
-            "uz": "⬅️ Orqaga",
-            "en": "⬅️ Back",
-        }
-        keyboards.button(text=back_text_map.get(lang, "⬅️ Back"))
-
-    keyboards.adjust(2)
-    return keyboards.as_markup(resize_keyboard=True)
-
-
-main_menu_en = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text=_("🛍 Order"))],
-        [KeyboardButton(text=_("📖 My orders"))],
-        [
-            KeyboardButton(text=_("⚙️Settings")),
-            KeyboardButton(text=_("🔥 Promotions"))
-        ],
-        [
-            KeyboardButton(text=_("🙋🏻‍♂️ Join to our team")),
-            KeyboardButton(text=_("☎️ Contact")),
+async def get_user_main_keyboards() -> ReplyKeyboardMarkup:
+    """
+    Translatable main keyboard menu (English text for gettext).
+    """
+    keyboard = ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        keyboard=[
+            [KeyboardButton(text=_("🛍 Order"))],
+            [KeyboardButton(text=_("📖 My orders"))],
+            [
+                KeyboardButton(text=_("⚙️Settings")),
+                KeyboardButton(text=_("🔥 Promotions"))
+            ],
+            [
+                KeyboardButton(text=_("🙋🏻‍♂️ Join to our team")),
+                KeyboardButton(text=_("☎️ Contact")),
+            ]
         ]
-    ], resize_keyboard=True
-)
+    )
+
+    return keyboard
 
 
 phone_number = ReplyKeyboardMarkup(
@@ -83,21 +70,6 @@ user_main_menu = ReplyKeyboardMarkup(
 # }
 
 
-main_menu_uz = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="🛍 Buyurtma")],
-        [KeyboardButton(text="📖 Mening buyurtmalarim")],
-        [
-            KeyboardButton(text="⚙️ Sozlamalar"),
-            KeyboardButton(text="🔥 Aksiya va chegirmalar")
-        ],
-        [
-            KeyboardButton(text="🙋🏻‍♂️ Jamoamizga qo'shilish"),
-            KeyboardButton(text="☎️ Aloqa"),
-        ]
-    ], resize_keyboard=True
-)
-
 
 order_en = ReplyKeyboardMarkup(
     keyboard=[
@@ -120,19 +92,7 @@ order_uz = ReplyKeyboardMarkup(
 )
 
 
-take_away_button_en = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="⬅️ Back"),
-            KeyboardButton(text="📍Determine nearest branch")
-        ],
-        [
-            KeyboardButton(text="Order here 🌐"),
-            KeyboardButton(text="Select branch")
-        ],
 
-    ], resize_keyboard=True
-)
 
 take_away_button_uz = ReplyKeyboardMarkup(
     keyboard=[

@@ -1,12 +1,11 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-async def get_language_keyboard():
+async def get_proceed_button(button_name: str, link: str):
     """Keyboard for language selection"""
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🇺🇸 English", callback_data="lang_en"),
-            InlineKeyboardButton(text="🇺🇿 O'zbekcha", callback_data="lang_uz"),
+            InlineKeyboardButton(text=button_name, callback_data="proceed_button", url=link),
         ]
     ])
     return keyboard
