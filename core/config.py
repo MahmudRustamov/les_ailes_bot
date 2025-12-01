@@ -10,7 +10,7 @@ load_dotenv(
 DEVELOPER = os.getenv('DEVELOPER')
 DJANGO_SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
-ALLOWED_HOSTS=os.getenv('ALLOWED_HOSTS')
+ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS').split(',') if host]
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_STORAGE_CHAT_ID = os.getenv('TELEGRAM_STORAGE_CHAT_ID')
