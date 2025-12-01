@@ -25,3 +25,5 @@ async def make_order_handler(message: Message, state: FSMContext):
     await message.answer(text=text, reply_markup=await get_order_type_keyboards())
 
 
+
+

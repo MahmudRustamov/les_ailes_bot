@@ -141,7 +141,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(MyTranslationAdmin):
     list_display = ['id', 'title', 'created_at']
     list_filter = ['created_at']
     search_fields = ['title']

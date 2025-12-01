@@ -1,6 +1,8 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from django.utils.translation import gettext as _
 
+
+
 async def get_language_keyboard():
     """Keyboard for language selection"""
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
@@ -27,7 +29,7 @@ async def get_rating_keyboard():
             ],
 
             # package header
-            [InlineKeyboardButton(text="Package / Qadoqlash", callback_data="header_package")],
+            [InlineKeyboardButton(text=_("Package"), callback_data="header_package")],
 
 
             [
@@ -39,7 +41,7 @@ async def get_rating_keyboard():
             ],
 
             # delivery header
-            [InlineKeyboardButton(text="Delivery / Yetkazib berish", callback_data="header_delivery")],
+            [InlineKeyboardButton(text=_("Delivery"), callback_data="header_delivery")],
 
             # delivery row
             [
@@ -51,3 +53,4 @@ async def get_rating_keyboard():
             ],
         ]
     )
+    return keyboard

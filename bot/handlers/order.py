@@ -3,10 +3,12 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from django.utils.translation import gettext as _
 
+from bot.keyboards.builder import default_keyboard_builder
 from bot.keyboards.default.order import get_takeaway_keyboards, get_delivery_keyboards
 from bot.keyboards.default.user import get_user_main_keyboards
 from bot.keyboards.inline.order import get_proceed_button
 from bot.states.order import OrderState
+from bot.utils.product import get_all_categories
 
 router = Router()
 
@@ -36,10 +38,15 @@ async def location_received_handler(message: Message, state: FSMContext):
         latitude=message.location.latitude
     )
     await state.set_state(OrderState.category)
+    categories = await get_all_categories()
 
     text = _("Where to start?")
-    await message.answer(text=text)
-    # Echo back the location
+    await message.answer(
+        text,
+        reply_markup=await default_keyboard_builder(
+            message=message, keyboards=categories, column_name='title'
+        )
+    )
     await message.answer_location(
         longitude=message.location.longitude,
         latitude=message.location.latitude

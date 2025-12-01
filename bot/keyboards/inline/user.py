@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-async def get_language_keyboard():
+async def get_language_inline_keyboards():
     """Keyboard for language selection"""
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [

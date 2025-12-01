@@ -3,7 +3,6 @@ import logging
 from aiogram import Bot, Dispatcher
 from django.apps import AppConfig
 
-from bot.handlers import auth
 from core import config
 
 logger = logging.getLogger(__name__)
@@ -31,7 +30,7 @@ class BotConfig(AppConfig):
 
             # Register handlers
             from bot.handlers import start
-            from bot.handlers import start, menu, backs, order
+            from bot.handlers import start, menu, backs, order, auth
             BotConfig.dp.include_router(start.router)
             BotConfig.dp.include_router(menu.router)
             BotConfig.dp.include_router(backs.router)

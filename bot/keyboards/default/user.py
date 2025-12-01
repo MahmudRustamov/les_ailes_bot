@@ -2,8 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from django.utils.translation import gettext as _
 
 
-
-async def get_language_keyboards():
+async def get_language_keyboard():
     """Keyboard for language selection"""
     languages = ReplyKeyboardMarkup(
         keyboard=[
@@ -14,8 +13,6 @@ async def get_language_keyboards():
         ], resize_keyboard=True
     )
     return languages
-
-
 
 
 async def get_user_main_keyboards() -> ReplyKeyboardMarkup:
@@ -43,138 +40,47 @@ async def get_user_main_keyboards() -> ReplyKeyboardMarkup:
 
 phone_number = ReplyKeyboardMarkup(
     keyboard=[[
-        KeyboardButton(text="Sharing/Ulashish", request_contact=True)
-    ]], resize_keyboard=True
+        KeyboardButton(text=_("📱Share my phone number"), request_contact=True)
+    ]], resize_keyboard=True, one_time_keyboard=True
 )
 
 location_button = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="📍 Share/Ulashish", request_location=True)]
+        [KeyboardButton(text="📍 Share my location", request_location=True)]
     ],
     resize_keyboard=True,
     one_time_keyboard=True
 )
 
-user_main_menu = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="👤 Profile"),
-            KeyboardButton(text="⚙️ Settings"),
+
+async def user_settings_keyboard() -> ReplyKeyboardMarkup:
+    keyboard = ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        keyboard=[
+            [KeyboardButton(text=_("✍️ Change name")), KeyboardButton(text=_("📱Change number"))],
+            [KeyboardButton(text=_("🏙 Change city")), KeyboardButton(text=_("🇬🇧 Change language"))],
+            [KeyboardButton(text=_("ℹ️ Branch information")), KeyboardButton(text=_(" 📄Public offer"))],
+            [KeyboardButton(text=_("⬅️ Back"))
+
+            ]
+        ],
+    )
+    return keyboard
+
+
+async def contact_keyboard() -> ReplyKeyboardMarkup:
+    keyboard = ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        keyboard=[
+            [
+                KeyboardButton(text=_("💬 Text us")),
+                KeyboardButton(text=_("✍️ Leave a feedback"))
+            ],
+            [
+                KeyboardButton(text=_("⬅️ Back")),
+            ],
+
         ]
-    ], resize_keyboard=True
-)
+    )
+    return keyboard
 
-# languages_keyboard = {
-#     "en": main_menu_en,
-#     "uz": main_menu_uz,
-# }
-
-
-
-order_en = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="🏃 Take away"),
-            KeyboardButton(text="🚙 Delivery")
-        ],
-        [KeyboardButton(text="⬅️ Back")]
-    ],  resize_keyboard=True
-)
-
-order_uz = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="🏃 Olib ketish"),
-            KeyboardButton(text="🚙 Yetkazib berish")
-        ],
-        [KeyboardButton(text="⬅️ Orqaga")]
-    ],  resize_keyboard=True
-)
-
-
-
-
-take_away_button_uz = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="⬅️ Orqaga"),
-            KeyboardButton(text="📍Eng yaqin filialni aniqlash")
-        ],
-        [
-            KeyboardButton(text="Bu yerda buyurtma berish 🌐"),
-            KeyboardButton(text="Filialni tanlash")
-        ],
-    ], resize_keyboard=True
-)
-
-contact_uz = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="💬 Biz bilan aloqaga chiqing"),
-            KeyboardButton(text="✍️ Fikr bildirish")
-        ],
-        [
-            KeyboardButton(text="⬅️ Orqaga"),
-        ],
-
-    ], resize_keyboard=True
-)
-
-contact_en = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="💬 Text us"),
-            KeyboardButton(text="✍️ Leave a feedback")
-        ],
-        [
-            KeyboardButton(text="⬅️ Back"),
-        ],
-
-    ], resize_keyboard=True
-)
-
-delivery_en = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="📍Determine nearest branch")
-        ],
-        [
-            KeyboardButton(text="⬅️ Back"),
-            KeyboardButton(text="🗺 My addresses")
-        ],
-
-    ], resize_keyboard=True, one_time_keyboard=True
-)
-
-delivery_uz = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text="📍Eng yaqin filialni aniqlash")
-        ],
-        [
-            KeyboardButton(text="⬅️ Orqaga"),
-            KeyboardButton(text="🗺 Mening manzillarim")
-        ],
-
-    ], resize_keyboard=True, one_time_keyboard=True
-)
-
-user_settings_en = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="✏️ Change name"), KeyboardButton(text="📱Change number")],
-        [KeyboardButton(text="🏙 Change city"), KeyboardButton(text="🇬🇧 Change language")],
-        [KeyboardButton(text="ℹ️ Branch information"), KeyboardButton(text=" 📄Public offer")],
-        [KeyboardButton(text="⬅️ Back")]
-    ],
-    resize_keyboard=True
-)
-
-user_settings_uz = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="✏️ Ismni o'zgartirish"), KeyboardButton(text="📱 Raqamni o'zgartirish")],
-        [KeyboardButton(text="🏙 Shaharni o'zgartirish"), KeyboardButton(text="🇺🇿 Tilni o'zgartirish")],
-        [KeyboardButton(text="ℹ️ Filial ma'lumotlari"), KeyboardButton(text="📄 Jamoat taklifi")],
-        [KeyboardButton(text="⬅️ Orqaga")]
-    ],
-    resize_keyboard=True
-)

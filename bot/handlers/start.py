@@ -1,12 +1,12 @@
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
 from django.utils.translation import gettext as _
 from bot.keyboards.builder import default_keyboard_builder
-from bot.keyboards.default.user import get_user_main_keyboards
-from bot.keyboards.inline.user import get_language_keyboard
-from bot.states.auth import RegisterState
+from bot.keyboards.default.user import get_user_main_keyboards, get_language_keyboard, user_settings_keyboard
+from bot.keyboards.inline.user import get_language_inline_keyboards
+from bot.states.auth import RegisterState, UpdateState
 from bot.utils.city import get_all_cities, get_city
 from bot.utils.product import get_all_products
 from bot.utils.translation import set_user_language, get_or_create_user
@@ -51,21 +51,23 @@ Hello! Welcome to Les Ailes delivery service.
         await state.set_state(RegisterState.city)
 
 
-@router.callback_query(F.data.startswith("lang_"), RegisterState.language)
-async def change_language(call: CallbackQuery, state: FSMContext):
+@router.message(F.text.in_(['🇺🇸 English', "🇺🇿 O'zbekcha"]), RegisterState.language)
+async def language_handler(message: Message, state: FSMContext):
     """Handle language change"""
-    language_code = call.data.split("_")[1]
-    user_id = call.from_user.id
-
-    # Update user's language (await async function)
-    await set_user_language(user_id, language_code)
+    user_id = message.from_user.id
+    if message.text == "🇺🇸 English":
+        language_code = "en"
+        await set_user_language(user_id, language_code)
+    elif message.text == "🇺🇿 O'zbekcha":
+        language_code = "uz"
+        await set_user_language(user_id, language_code)
 
     cities = await get_all_cities()
     text = _("Please choose the city")
-    await call.message.answer(
+    await message.answer(
         text,
         reply_markup=await default_keyboard_builder(
-            message=call.message, keyboards=cities, column_name='name'
+            message=message, keyboards=cities, column_name='name'
         )
     )
 
@@ -88,20 +90,6 @@ async def get_city_handler(message: Message, state: FSMContext):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # -----------------------------------------------------
 @router.message(Command("help"))
 async def cmd_help(message: Message):
@@ -118,10 +106,45 @@ async def cmd_help(message: Message):
 
 
 @router.message(Command("language"))
-async def cmd_language(message: Message):
-    """Language selection command"""
+async def cmd_language(message: Message, state: FSMContext):
     text = _("🌐 Please select your language:")
-    await message.answer(text, reply_markup=await get_language_keyboard())
+    await message.answer(text, reply_markup=await get_language_inline_keyboards())
+
+
+@router.callback_query(F.data.startswith("lang_"))
+async def command_language(call: CallbackQuery):
+    language_code = call.data.split("_")[1]
+    user_id = call.from_user.id
+
+    await set_user_language(user_id, language_code)
+
+    text = _("Language successfully updated ✅"),
+
+    await call.message.answer(
+        _("Language successfully updated ✅")
+    )
+
+
+@router.message(F.text.in_(['🇺🇸 English', "🇺🇿 O'zbekcha"]), UpdateState.change_lang)
+async def settings_change_language(message: Message, state: FSMContext):
+    """Handle language change from settings menu"""
+    user_id = message.from_user.id
+
+    if message.text == "🇺🇸 English":
+        language_code = "en"
+    elif message.text == "🇺🇿 O'zbekcha":
+        language_code = "uz"
+    else:
+        return
+
+    await set_user_language(user_id, language_code)
+
+    await message.answer(
+        _("Language successfully updated ✅"),
+        reply_markup=await user_settings_keyboard()
+    )
+    await state.clear()
+
 
 
 @router.message(Command("photo"))
