@@ -46,7 +46,7 @@ phone_number = ReplyKeyboardMarkup(
 
 location_button = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="📍 Share my location", request_location=True)]
+        [KeyboardButton(text=_("📍 Share my location"), request_location=True)]
     ],
     resize_keyboard=True,
     one_time_keyboard=True

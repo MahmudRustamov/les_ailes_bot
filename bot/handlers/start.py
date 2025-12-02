@@ -7,6 +7,7 @@ from bot.keyboards.builder import default_keyboard_builder
 from bot.keyboards.default.user import get_user_main_keyboards, get_language_keyboard, user_settings_keyboard
 from bot.keyboards.inline.user import get_language_inline_keyboards
 from bot.states.auth import RegisterState, UpdateState
+from bot.states.order import OrderState
 from bot.utils.city import get_all_cities, get_city
 from bot.utils.product import get_all_products
 from bot.utils.translation import set_user_language, get_or_create_user
@@ -70,7 +71,6 @@ async def language_handler(message: Message, state: FSMContext):
             message=message, keyboards=cities, column_name='name'
         )
     )
-
     await state.set_state(RegisterState.city)
 
 

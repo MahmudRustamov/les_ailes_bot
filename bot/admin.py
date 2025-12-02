@@ -7,6 +7,7 @@ from modeltranslation.admin import TranslationAdmin
 from bot.apps import BotConfig
 from bot.models.base import City
 from bot.models.product import Product, Category
+from bot.models.user import TelegramUser
 from core import config
 
 
@@ -152,3 +153,10 @@ class CityAdmin(MyTranslationAdmin):
     list_display = ['id', 'name', 'created_at']
     list_filter = ['created_at']
     search_fields = ['name']
+
+
+@admin.register(TelegramUser)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user_id', 'username', 'first_name', 'last_name', 'phone_number', 'language_code', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['username']

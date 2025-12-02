@@ -1,10 +1,10 @@
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from django.utils.translation import gettext as _
 from bot.keyboards.builder import default_keyboard_builder
 from bot.keyboards.default.order import get_delivery_keyboards
-from bot.keyboards.default.user import contact_keyboard, user_settings_keyboard, get_language_keyboard
+from bot.keyboards.default.user import contact_keyboard, user_settings_keyboard, get_language_keyboard, phone_number
 from bot.keyboards.inline.feedback import get_rating_keyboard
 from bot.keyboards.inline.order import get_proceed_button
 from bot.states.auth import UpdateState
@@ -67,7 +67,8 @@ async def offers_handler(message: Message, state: FSMContext):
 
 @router.message(F.text.in_(['✍️ Change name', "✍️ Ismni o'zgartirish"]))
 async def update_name_handler(message: Message, state: FSMContext):
-    await message.answer("Please enter your new name:")
+    text = "Please enter your new name:"
+    await message.answer(text=text, reply_markup=ReplyKeyboardRemove())
     await state.set_state(UpdateState.change_name)
 
 
@@ -148,16 +149,33 @@ async def rating_handler(callback: CallbackQuery):
 
 @router.message(F.text.in_(['📱Change number', "📱Raqamni o'zgartirish"]))
 async def update_number_handler(message: Message, state: FSMContext):
-    await message.answer(_("Please enter your new phone number:"))
+    text = _("Please enter your new phone number:")
+    await message.answer(text=text, reply_markup=phone_number)
     await state.set_state(UpdateState.change_phone)
 
 
 @router.message(UpdateState.change_phone)
 async def save_new_number(message: Message, state: FSMContext):
-    new_number = message.text
+    if message.contact:
+        new_number = message.contact.phone_number
 
-    if not new_number.replace("+", "").isdigit():
-        await message.answer(_("Please enter a valid phone number(example: +998901234567):"))
+    elif message.text:
+        new_number = message.text.strip()
+    else:
+        text = _("Please send your phone number as text or via the 'Share Phone Number' button.")
+        await message.answer(text=text)
+        return
+
+
+    cleaned = new_number.replace("+", "")
+    if not cleaned.isdigit():
+        text = _("Please enter a valid phone number (example: +998901234567).")
+        await message.answer(text=text)
+        return
+
+    if len(cleaned) != 12:
+        text = _("Phone number must contain 12 digits (example: +998901234567)")
+        await message.answer(text=text)
         return
 
     await partial_update_user(
@@ -171,5 +189,3 @@ async def save_new_number(message: Message, state: FSMContext):
     )
 
     await state.set_state(OrderState.order_type)
-
-

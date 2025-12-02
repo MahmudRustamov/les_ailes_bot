@@ -20,10 +20,15 @@ async def make_order_handler(message: Message, state: FSMContext):
 @router.message(F.text.in_(['⬅️ Back', '⬅️ Ortga']), OrderState.location)
 async def make_order_handler(message: Message, state: FSMContext):
     await state.set_state(OrderState.order_type)
-
     text = _("Take away  🙋‍♂️ or delivery 🚙")
     await message.answer(text=text, reply_markup=await get_order_type_keyboards())
 
 
+
+@router.message(F.text.in_(['⬅️ Back', '⬅️ Ortga']))
+async def back_handler(message: Message, state: FSMContext):
+    await state.set_state(OrderState.order_type)
+    text = _('Welcome to main menu 😊')
+    await message.answer(text=text, reply_markup=await get_user_main_keyboards())
 
 
